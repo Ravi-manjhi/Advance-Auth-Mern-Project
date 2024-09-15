@@ -29,6 +29,12 @@ type Store = {
   isSignIn: () => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  forgotPassword: (email: string) => Promise<void>;
+  resetPassword: (
+    token: string,
+    password: string,
+    confirmPassword: string
+  ) => Promise<void>;
 };
 
 const API_URL = "http://localhost:8080/api/auth";
@@ -175,6 +181,68 @@ export const useAuthStore = create<Store>((set) => ({
       throw error;
     } finally {
       set({ isLoading: false });
+    }
+  },
+  forgotPassword: async (email) => {
+    set({ isLoading: true });
+    try {
+      const res = await axios.post(`${API_URL}/forget-password`, {
+        email,
+      });
+      toast.success(res.data.message);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        set({
+          error: true,
+          message: error.response.data.message,
+        });
+
+        toast.error(error.response.data.message);
+      } else {
+        set({
+          error: true,
+          message: "An unexpected error occurred.",
+        });
+      }
+      throw error;
+    } finally {
+      set({ isLoading: false });
+
+      setTimeout(() => {
+        set({ error: false, message: null });
+      }, 3000);
+    }
+  },
+
+  resetPassword: async (token, password, confirmPassword) => {
+    set({ isLoading: true });
+    try {
+      const res = await axios.post(`${API_URL}/forget-password/${token}`, {
+        password,
+        confirmPassword,
+      });
+      toast.success(res.data.message);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        set({
+          error: true,
+          message: error.response.data.message,
+        });
+
+        toast.error(error.response.data.message);
+      } else {
+        set({
+          error: true,
+          message: "An unexpected error occurred.",
+        });
+      }
+      throw error;
+    } finally {
+      set({ isLoading: false });
+
+      setTimeout(() => {
+        set({ error: false, message: null });
+      }, 3000);
     }
   },
 }));

@@ -12,7 +12,7 @@ const initialState = {
 
 const Login = () => {
   const [userData, setUserData] = useState(initialState);
-  const { login } = useAuthStore();
+  const { login, error, message } = useAuthStore();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -62,9 +62,22 @@ const Login = () => {
             }}
           />
 
+          <div className="flex items-center mb-6">
+            <Link
+              to="/forgot-password"
+              className="text-sm text-green-400 hover:underline"
+            >
+              Forgot password?
+            </Link>
+          </div>
+          {error && (
+            <p className="text-red-500 font-semibold mb-2">{message}</p>
+          )}
+
           <motion.button
-            className="mt-5 w-full py-3 px-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-lg shadow-lg hover:from-gray-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-gray-900 transition duration-200"
+            whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
+            className="w-full py-3 px-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-lg shadow-lg hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition duration-200"
             type="submit"
           >
             {isLoading ? (
